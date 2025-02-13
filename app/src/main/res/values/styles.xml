@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MAIN SCREEN -->
+    <style name="mainScreenButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginBottom">@dimen/button_margin_bottom</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
+        <item name="cornerRadius">@dimen/button_corner_rad</item>
+        <item name="android:stateListAnimator">@null</item>
+
+        <item name="android:fontFamily">@font/yandex_sans_display_medium</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:textColor">?attr/colorPrimaryVariant</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+
+        <item name="iconTint">?attr/colorPrimaryVariant</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconSize">@dimen/button_icon_size</item>
+        <item name="iconPadding">@dimen/button_icon_padding</item>
+    </style>
+
+    <!-- SETTINGS SCREEN-->
+    <style name="settingsBlock">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/settings_block_height</item>
+
+        <item name="android:layout_gravity">start</item>
+        <item name="android:layout_marginStart">@dimen/settings_block_margin_start</item>
+        <item name="android:layout_marginEnd">@dimen/settings_block_margin_end</item>
+        <item name="android:gravity">center_vertical</item>
+
+        <item name="android:fontFamily">@font/yandex_sans_display_regular</item>
+        <item name="android:textSize">@dimen/regular_text_size</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="drawableTint">?attr/colorSecondaryVariant</item>
+    </style>
+
+    <style name="settingsSwitchLight" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/settings_block_height</item>
+        <item name="thumbTint">@color/gray</item>
+        <item name="trackTint">@color/light_gray</item>
+        <item name="trackTintMode">src_in</item>
+
+        <item name="android:fontFamily">@font/yandex_sans_display_regular</item>
+        <item name="android:textSize">@dimen/regular_text_size</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="settingsSwitchDark" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/settings_block_height</item>
+        <item name="thumbTint">@color/blue</item>
+        <item name="trackTint">@color/light_blue</item>
+
+        <item name="android:fontFamily">@font/yandex_sans_display_regular</item>
+        <item name="android:textSize">@dimen/regular_text_size</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
+
+    <!-- COMMON STYLES-->
+    <style name="titleText">
+        <item name="android:fontFamily">@font/yandex_sans_display_medium</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+    </style>
+
+    <style name="basicRootContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+
+</resources>

@@ -1,0 +1,36 @@
+<resources>
+    <!-- MAIN SCREEN -->
+    <string name="main_title">Playlist Maker</string>
+    <string name="main_button_search">Поиск</string>
+    <string name="main_button_media">Медиатека</string>
+    <string name="main_button_settings">Настройки</string>
+
+    <!-- SETTINGS SCREEN-->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_black_theme">Темная тема</string>
+    <string name="settings_theme">Переключить тему</string>
+
+    <string name="settings_share">Поделиться приложением</string>
+    <string name="settings_share_text">ИВТ-211 Власов Данил</string>
+
+    <string name="settings_support">Написать в поддержку</string>
+    <string name="settings_support_email">justefir@gmail.com</string>
+    <string name="settings_support_subject">Сообщение разработчикам Playlist Maker</string>
+    <string name="settings_support_text">Работает!!</string>
+    <string name="settings_support_choose_email_service">Выберите почтовый сервис</string>
+    <string name="settings_support_email_service_error">Нет доступного почтового клиента!</string>
+
+    <string name="settings_user_agreement">Пользовательское соглашение</string>
+    <string name="settings_user_agreement_url">https://vivt.ru</string>
+
+
+    <!-- SEARCH SCREEN-->
+    <string name="search_title">Поиск</string>
+    <string name="search_placeholder">Поиск</string>
+    <string name="clear_button_description">Очистить</string>
+
+
+    <!-- COMMON STRINGS -->
+    <string name="app_name">PlaylistMaker</string>
+    <string name="back_button_description">Вернуться назад</string>
+</resources>

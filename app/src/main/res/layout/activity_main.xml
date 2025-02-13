@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- ROOT CONTAINER -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/basicRootContainer"
+    android:paddingHorizontal="@dimen/main_horizontal_padding"
+    android:paddingBottom="@dimen/main_bottom_padding"
+    android:background="?attr/colorPrimary">
+
+    <!-- TITLE -->
+    <TextView
+        style="@style/titleText"
+        android:textColor="?attr/colorOnPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_title_block_height"
+        android:text="@string/main_title"
+         />
+
+    <!-- BUTTON BLOCK CONTAINER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/button_margin_top"
+        android:orientation="vertical">
+
+        <!-- SEARCH BUTTON -->
+        <Button
+            style="@style/mainScreenButton"
+            android:id="@+id/search_button"
+            android:text="@string/main_button_search"
+            app:icon="@drawable/icon_search"/>
+
+        <!-- MEDIA LIBRARY BUTTON -->
+        <Button
+            style="@style/mainScreenButton"
+            android:id="@+id/media_button"
+            app:icon="@drawable/icon_media"
+            android:text="@string/main_button_media"/>
+
+        <!-- SETTINGS BUTTON -->
+        <Button
+            style="@style/mainScreenButton"
+            android:id="@+id/settings_button"
+            android:text="@string/main_button_settings"
+            app:icon="@drawable/icon_settings" />
+    </LinearLayout>
+</LinearLayout>

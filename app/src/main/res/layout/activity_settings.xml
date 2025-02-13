@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- ROOT CONTAINER -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/basicRootContainer"
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical">
+
+
+    <!-- TITLE AND BACK BUTTON CONTAINER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_title_block_height"
+        android:orientation="horizontal">
+
+        <!-- BACK BUTTON -->
+        <FrameLayout
+            android:layout_width="@dimen/settings_title_block_height"
+            android:layout_height="@dimen/settings_title_block_height">
+
+            <ImageView
+                android:id="@+id/settings_back_button"
+                android:layout_width="@dimen/settings_back_icon_size"
+                android:layout_height="@dimen/settings_back_icon_size"
+                android:layout_gravity="center"
+                android:contentDescription="@string/settings_theme"
+                android:src="@drawable/icon_arrow_back"
+                app:tint="?attr/colorOnSecondary" />
+        </FrameLayout>
+
+        <!-- TITLE -->
+        <TextView
+            style="@style/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_title_block_height"
+            android:layout_marginStart="8dp"
+            android:text="@string/settings_title"
+            android:textColor="?attr/colorOnSecondary" />
+    </LinearLayout>
+
+    <!-- SETTINGS -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical">
+
+        <!-- THEME SWITCH -->
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/settings_theme_switch"
+
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/settings_block_height"
+            android:layout_marginStart="@dimen/settings_block_margin_start"
+            android:layout_marginEnd="12dp"
+            android:checked="false"
+            android:text="@string/settings_black_theme" />
+
+        <!-- SHARE APP -->
+        <TextView
+            android:id="@+id/settings_share"
+            style="@style/settingsBlock"
+            android:text="@string/settings_share"
+            app:drawableEndCompat="@drawable/icon_share" />
+
+        <!-- SUPPORT -->
+        <TextView
+            android:id="@+id/settings_support"
+            style="@style/settingsBlock"
+            android:text="@string/settings_support"
+            app:drawableEndCompat="@drawable/icon_support" />
+
+        <!-- USER AGREEMENT -->
+        <TextView
+            android:id="@+id/settings_user_agreement"
+            style="@style/settingsBlock"
+            android:text="@string/settings_user_agreement"
+            app:drawableEndCompat="@drawable/icon_arrow_forward" />
+    </LinearLayout>
+</LinearLayout>

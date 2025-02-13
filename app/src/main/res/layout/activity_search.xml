@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- ROOT CONTAINER -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/basicRootContainer"
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical">
+
+
+    <!-- TITLE AND BACK BUTTON CONTAINER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_title_block_height"
+        android:orientation="horizontal">
+
+        <!-- BACK BUTTON -->
+        <FrameLayout
+            android:layout_width="@dimen/settings_title_block_height"
+            android:layout_height="@dimen/settings_title_block_height">
+
+            <ImageView
+                android:id="@+id/search_back_button"
+                android:layout_width="@dimen/settings_back_icon_size"
+                android:layout_height="@dimen/settings_back_icon_size"
+                android:layout_gravity="center"
+                android:contentDescription="@string/back_button_description"
+                android:src="@drawable/icon_arrow_back"
+                app:tint="?attr/colorOnSecondary" />
+        </FrameLayout>
+
+        <!-- TITLE -->
+        <TextView
+            style="@style/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/main_title_block_height"
+            android:layout_marginStart="8dp"
+            android:text="@string/search_title"
+            android:textColor="?attr/colorOnSecondary" />
+    </LinearLayout>
+
+    <!-- SEARCH LINE -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp">
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:inputType="text"
+            android:hint="@string/search_placeholder"
+            android:lines="1"
+            android:maxLength="25"
+            android:backgroundTint="@color/light_gray"
+            android:drawableStart="@drawable/icon_search_line"
+            android:textCursorDrawable="@drawable/search_cursor"
+            android:drawablePadding="9dp"
+            android:drawableTint="?attr/colorTertiary"
+            android:background="@drawable/search_line_background"
+            android:paddingStart="13dp"
+            android:textColorHint="?attr/colorTertiary"
+            android:textSize="@dimen/regular_text_size"
+            android:textStyle="normal"
+            android:fontFamily="@font/yandex_sans_display_regular"
+            android:textColor="?attr/colorPrimaryVariant" />
+
+        <!-- CLEAR BUTTON -->
+        <ImageView
+            android:id="@+id/clear_search_button"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/clear_button_description"
+            android:src="@drawable/icon_x"
+            android:visibility="gone"
+            android:layout_marginStart="8dp"
+            android:clickable="true" />
+    </LinearLayout>
+</LinearLayout>
