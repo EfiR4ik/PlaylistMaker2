@@ -53,7 +53,8 @@ class SettingsActivity : AppCompatActivity() {
             val body = getString(R.string.settings_support_text)
 
             val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("mailto:$email")
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
                 putExtra(Intent.EXTRA_SUBJECT, subject)
                 putExtra(Intent.EXTRA_TEXT, body)
             }
@@ -65,7 +66,8 @@ class SettingsActivity : AppCompatActivity() {
 //                 putExtra(Intent.EXTRA_TEXT, body)
 //            }
 
-            val chooserIntent = Intent.createChooser(emailIntent, getString(R.string.settings_support_choose_email_service))
+            val chooserIntent = Intent.createChooser(emailIntent,
+                getString(R.string.settings_support_choose_email_service))
             if (chooserIntent.resolveActivity(packageManager) != null) {
                 startActivity(chooserIntent)
             }
