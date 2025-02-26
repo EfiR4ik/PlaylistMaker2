@@ -3,6 +3,7 @@
 <!-- ROOT CONTAINER -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/basicRootContainer"
     android:background="?attr/colorSecondary"
     android:orientation="vertical">
@@ -40,7 +41,7 @@
     </LinearLayout>
 
     <!-- SEARCH LINE -->
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -49,36 +50,48 @@
         <EditText
             android:id="@+id/search_edit_text"
             style="@style/Widget.AppCompat.EditText"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:layout_weight="1"
-            android:inputType="text"
-            android:hint="@string/search_placeholder"
-            android:lines="1"
-            android:maxLength="25"
+            android:background="@drawable/search_line_background"
             android:backgroundTint="@color/light_gray"
             android:drawableStart="@drawable/icon_search_line"
-            android:textCursorDrawable="@drawable/search_cursor"
             android:drawablePadding="9dp"
             android:drawableTint="?attr/colorTertiary"
-            android:background="@drawable/search_line_background"
+            android:fontFamily="@font/yandex_sans_display_regular"
+            android:hint="@string/search_placeholder"
+            android:inputType="text"
+            android:lines="1"
+            android:maxLength="30"
             android:paddingStart="13dp"
+            android:textColor="?attr/colorPrimaryVariant"
             android:textColorHint="?attr/colorTertiary"
+            android:textCursorDrawable="@drawable/search_cursor"
             android:textSize="@dimen/regular_text_size"
             android:textStyle="normal"
-            android:fontFamily="@font/yandex_sans_display_regular"
-            android:textColor="?attr/colorPrimaryVariant" />
+            tools:ignore="Autofill,DuplicateSpeakableTextCheck,RtlSymmetry,TextContrastCheck,TouchTargetSizeCheck,VisualLintTextFieldSize" />
 
         <!-- CLEAR BUTTON -->
         <ImageView
             android:id="@+id/clear_search_button"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_gravity="center"
+            style="@style/searchXIcon"
             android:contentDescription="@string/clear_button_description"
             android:src="@drawable/icon_x"
             android:visibility="gone"
-            android:layout_marginStart="8dp"
-            android:clickable="true" />
-    </LinearLayout>
+            android:layout_margin="12dp"
+            android:layout_gravity="end"
+            tools:ignore="RtlSymmetry"/>
+    </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:clipToPadding="false"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/track_view"/>
+
 </LinearLayout>

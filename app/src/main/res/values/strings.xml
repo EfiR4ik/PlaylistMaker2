@@ -28,7 +28,8 @@
     <string name="search_title">Поиск</string>
     <string name="search_placeholder">Поиск</string>
     <string name="clear_button_description">Очистить</string>
-
+    <string name="track_cover_description">Обложка трека</string>
+    <string name="see_more">Подробнее</string>
 
     <!-- COMMON STRINGS -->
     <string name="app_name">PlaylistMaker</string>

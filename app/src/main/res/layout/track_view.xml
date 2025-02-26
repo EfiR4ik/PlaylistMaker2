@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/trackView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <!-- TRACK COVER -->
+    <ImageView
+        android:id="@+id/track_cover"
+        android:layout_width="@dimen/track_cover_size"
+        android:layout_height="@dimen/track_cover_size"
+        android:contentDescription="@string/track_cover_description"
+        tools:src="@drawable/track_cover_placeholder"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- TRACK NAME -->
+    <TextView
+        android:id="@+id/track_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="50dp"
+        tools:text="Smells Like Teen Spirit"
+
+        android:textSize="@dimen/regular_text_size"
+        android:fontFamily="@font/yandex_sans_display_regular"
+        android:textColor="?attr/colorOnSecondary"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"
+
+        app:layout_constraintStart_toEndOf="@id/track_cover"
+        app:layout_constraintTop_toTopOf="@id/track_cover"
+        app:layout_constraintBottom_toTopOf="@id/track_author"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- TRACK AUTHOR -->
+    <TextView
+        android:id="@+id/track_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        tools:text="Nirvana"
+
+        android:textSize="@dimen/small_text_size"
+        android:fontFamily="@font/yandex_sans_display_regular"
+        android:textColor="?attr/colorOnSecondaryFixed"
+        android:maxLines="1"
+        android:ellipsize="end"
+
+        app:layout_constraintWidth_max="150dp"
+        app:layout_constraintStart_toEndOf="@id/track_cover"
+        app:layout_constraintTop_toBottomOf="@id/track_name"
+        app:layout_constraintBottom_toBottomOf="@id/track_cover"
+        app:layout_constraintEnd_toStartOf="@id/track_separator"/>
+
+    <!-- TRACK AUTHOR AND DURATION DIVIDER -->
+    <ImageView
+        android:id="@+id/track_separator"
+        android:layout_width="3dp"
+        android:layout_height="3dp"
+        android:layout_marginStart="3dp"
+
+        android:contentDescription="@string/see_more"
+        android:src="@drawable/circle_separator"
+        app:tint="?attr/colorOnSecondaryFixed"
+        app:layout_constraintStart_toEndOf="@id/track_author"
+        app:layout_constraintTop_toBottomOf="@id/track_name"
+        app:layout_constraintBottom_toBottomOf="@id/track_cover"
+        />
+
+    <!-- TRACK DURATION -->
+    <TextView
+        android:id="@+id/track_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="50dp"
+        tools:text="5:01"
+
+        android:textSize="@dimen/small_text_size"
+        android:fontFamily="@font/yandex_sans_display_regular"
+        android:textColor="?attr/colorOnSecondaryFixed"
+        android:maxLines="1"
+
+        app:layout_constraintStart_toEndOf="@id/track_separator"
+        app:layout_constraintTop_toBottomOf="@id/track_name"
+        app:layout_constraintBottom_toBottomOf="@id/track_cover"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- TRACK DETAILS BUTTON -->
+    <ImageView
+        android:id="@+id/track_details"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:contentDescription="@string/see_more"
+        android:src="@drawable/icon_arrow_forward"
+        app:tint="?attr/colorOnSecondaryFixed"
+        app:layout_constraintTop_toTopOf="@id/track_cover"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/track_cover"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

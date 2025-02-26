@@ -59,13 +59,6 @@ class SettingsActivity : AppCompatActivity() {
                 putExtra(Intent.EXTRA_TEXT, body)
             }
 
-//            val emailIntent = Intent(Intent.ACTION_SEND).apply {
-//                type = "text/plain"
-//                putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-//                putExtra(Intent.EXTRA_SUBJECT, subject)
-//                 putExtra(Intent.EXTRA_TEXT, body)
-//            }
-
             val chooserIntent = Intent.createChooser(emailIntent,
                 getString(R.string.settings_support_choose_email_service))
             if (chooserIntent.resolveActivity(packageManager) != null) {
