@@ -30,6 +30,8 @@
     <string name="clear_button_description">Очистить</string>
     <string name="track_cover_description">Обложка трека</string>
     <string name="see_more">Подробнее</string>
+    <string name="search_history">Вы искали</string>
+    <string name="clear_history_description">Очистить историю</string>
 
     <!-- COMMON STRINGS -->
     <string name="app_name">PlaylistMaker</string>

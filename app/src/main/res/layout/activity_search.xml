@@ -81,17 +81,53 @@
             android:layout_gravity="end"
             tools:ignore="RtlSymmetry"/>
     </FrameLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="16dp"
-        android:clipToPadding="false"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/track_view"/>
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- SEARCH HISTORY TITLE -->
+            <TextView
+                android:id="@+id/history_title"
+                style="@style/titleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/search_history"
+                android:textSize="20sp"
+                android:textColor="?attr/colorOnSecondary"
+                android:layout_marginTop="16dp"
+                android:gravity="center"/>
+
+            <!-- MAIN RECYCLER VIEW -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:clipToPadding="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/track_view"/>
+
+            <!-- CLEAR HISTORY BUTTON -->
+            <Button
+                android:id="@+id/clear_history_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:backgroundTint="?attr/colorButtonNormal"
+                android:contentDescription="@string/clear_history_description"
+                android:fontFamily="@font/yandex_sans_display_regular"
+                android:textSize="@dimen/regular_text_size"
+                android:text="@string/clear_history_description"
+                android:textColor="?attr/colorSecondary"
+                android:visibility="visible" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

@@ -11,5 +11,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <item name="switchStyle">@style/settingsSwitchDark</item>
         <item name="colorOnSecondaryFixed">@color/gray</item>
+        <item name="colorButtonNormal">@color/white</item>
     </style>
 </resources>
