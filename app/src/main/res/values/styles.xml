@@ -42,8 +42,8 @@
     <style name="settingsSwitchLight" parent="Widget.AppCompat.CompoundButton.Switch">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/settings_block_height</item>
-        <item name="thumbTint">@color/gray</item>
-        <item name="trackTint">@color/light_gray</item>
+        <item name="thumbTint">@color/grey</item>
+        <item name="trackTint">@color/light_grey</item>
         <item name="trackTintMode">src_in</item>
 
         <item name="android:fontFamily">@font/yandex_sans_display_regular</item>

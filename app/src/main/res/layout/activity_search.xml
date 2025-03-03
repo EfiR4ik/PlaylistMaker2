@@ -19,7 +19,6 @@
         <FrameLayout
             android:layout_width="@dimen/settings_title_block_height"
             android:layout_height="@dimen/settings_title_block_height">
-
             <ImageView
                 android:id="@+id/search_back_button"
                 android:layout_width="@dimen/settings_back_icon_size"
@@ -53,14 +52,16 @@
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:background="@drawable/search_line_background"
-            android:backgroundTint="@color/light_gray"
+            android:backgroundTint="@color/light_grey"
             android:drawableStart="@drawable/icon_search_line"
             android:drawablePadding="9dp"
             android:drawableTint="?attr/colorTertiary"
             android:fontFamily="@font/yandex_sans_display_regular"
             android:hint="@string/search_placeholder"
             android:inputType="text"
+            android:imeOptions="actionDone"
             android:lines="1"
+            android:singleLine="true"
             android:maxLength="30"
             android:paddingStart="13dp"
             android:textColor="?attr/colorPrimaryVariant"
@@ -76,15 +77,91 @@
             style="@style/searchXIcon"
             android:contentDescription="@string/clear_button_description"
             android:src="@drawable/icon_x"
+            android:clickable="true"
             android:visibility="gone"
             android:layout_margin="12dp"
             android:layout_gravity="end"
             tools:ignore="RtlSymmetry"/>
     </FrameLayout>
+
+    <!-- ERROR FRAME -->
+    <FrameLayout
+        android:id="@+id/errorFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible">
+        <!-- NOT FOUND ERROR -->
+        <FrameLayout
+            android:id="@+id/errorNotFound"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:visibility="gone">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="80dp"
+                android:text="@string/notFound"
+                android:gravity="center"
+                android:textColor="?attr/colorOnSecondary"
+                android:textSize="@dimen/subtitle_text_size"
+                android:fontFamily="@font/yandex_sans_display_medium"
+                app:drawableTopCompat="@drawable/not_found_placeholder" />
+        </FrameLayout>
+        <!-- NO CONNECTION ERROR -->
+        <LinearLayout
+            android:id="@+id/errorNoConnection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="80dp"
+                android:text="@string/noConnection"
+                android:gravity="center"
+                android:textColor="?attr/colorOnSecondary"
+                android:textSize="@dimen/subtitle_text_size"
+                android:textStyle="bold"
+                android:fontFamily="@font/yandex_sans_display_regular"
+                app:drawableTopCompat="@drawable/no_connection_placeholder"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="30dp"
+                android:text="@string/checkInternetConnection"
+                android:gravity="center"
+                android:textColor="?attr/colorOnSecondary"
+                android:textSize="@dimen/subtitle_text_size"
+                android:textStyle="bold"
+                android:fontFamily="@font/yandex_sans_display_regular"/>
+            <!-- REFRESH BUTTON -->
+            <Button
+                android:id="@+id/refreshButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:backgroundTint="?attr/colorButtonNormal"
+                android:contentDescription="@string/clear_history_description"
+                android:fontFamily="@font/yandex_sans_display_regular"
+                android:textSize="@dimen/regular_text_size"
+                android:text="@string/refresh"
+                android:textColor="?attr/colorSecondary" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- MAIN CONTENT PART -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,14 +170,16 @@
             <!-- SEARCH HISTORY TITLE -->
             <TextView
                 android:id="@+id/history_title"
-                style="@style/titleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/search_history"
-                android:textSize="20sp"
+                android:textSize="@dimen/subtitle_text_size"
                 android:textColor="?attr/colorOnSecondary"
+                android:textStyle="bold"
+                android:fontFamily="@font/yandex_sans_display_regular"
                 android:layout_marginTop="16dp"
-                android:gravity="center"/>
+                android:gravity="center"
+                tools:visibility="visible"/>
 
             <!-- MAIN RECYCLER VIEW -->
             <androidx.recyclerview.widget.RecyclerView
@@ -112,7 +191,8 @@
                 android:paddingTop="16dp"
                 android:clipToPadding="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/track_view"/>
+                tools:listitem="@layout/track_view"
+                tools:visibility="gone"/>
 
             <!-- CLEAR HISTORY BUTTON -->
             <Button
@@ -127,7 +207,8 @@
                 android:textSize="@dimen/regular_text_size"
                 android:text="@string/clear_history_description"
                 android:textColor="?attr/colorSecondary"
-                android:visibility="visible" />
+                android:visibility="visible"
+                tools:visibility="gone"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -4,24 +4,41 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import ITunesApi
+import ITunesResponse
+import android.icu.text.SimpleDateFormat
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.Locale
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
     private lateinit var clearSearchButton: ImageView
     private var searchQuery: String? = null
     private lateinit var tracksAdapter: TracksAdapter
-    private lateinit var allTracks: List<Track>
     private lateinit var searchHistory: SearchHistory
     private lateinit var recyclerView: RecyclerView
     private lateinit var clearHistoryButton: Button
     private lateinit var historyTitle: TextView
     private var displayedTracks: List<Track> = emptyList()
+    private lateinit var iTunesApi: ITunesApi
+    private lateinit var errorFrame: FrameLayout
+    private lateinit var errorNotFound: FrameLayout
+    private lateinit var errorNoConnection: LinearLayout
+    private lateinit var refreshButton: Button
+    private var lastSearchQuery: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +48,34 @@ class SearchActivity : AppCompatActivity() {
         clearSearchButton = findViewById(R.id.clear_search_button)
         recyclerView = findViewById(R.id.recyclerView)
         clearHistoryButton = findViewById(R.id.clear_history_button)
+        errorFrame = findViewById(R.id.errorFrame)
+        errorNotFound = findViewById(R.id.errorNotFound)
+        errorNoConnection = findViewById(R.id.errorNoConnection)
+        refreshButton = findViewById(R.id.refreshButton)
+        
+        // Retrofit init
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://itunes.apple.com")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        iTunesApi = retrofit.create(ITunesApi::class.java)
+
+        // Keyboard done button click listener
+        searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val query = searchEditText.text.toString()
+                performSearch(query)
+            }
+            false
+        }
+
+        // Refresh button click listener
+        refreshButton.setOnClickListener{
+            lastSearchQuery?.let { query ->
+                performSearch(query)
+            }
+        }
 
         // Shared preferences and Search History
         val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
@@ -52,7 +97,9 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     ImageView.VISIBLE
                 }
-                filterTracks(s.toString())
+                if (s.isNullOrEmpty()) {
+                    updateUI()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -62,7 +109,7 @@ class SearchActivity : AppCompatActivity() {
 
         // Clear button ClickListener
         clearSearchButton.setOnClickListener {
-            searchEditText.setText("")
+            searchEditText.text.clear()
             clearSearchButton.visibility = ImageView.GONE
             updateUI()
         }
@@ -72,15 +119,6 @@ class SearchActivity : AppCompatActivity() {
             searchEditText.setText(searchQuery)
         }
 
-        // Test list of tracks
-        allTracks = listOf(
-            Track(1, "Smells Like Teen Spirit", "Nirvana", "5:01", "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-            Track(2, "Billie Jean", "Michael Jackson", "4:35", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-            Track(3, "Stayin' Alive", "Bee Gees", "4:10", "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"),
-            Track(4, "Whole Lotta Love", "Led Zeppelin", "5:33", "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"),
-            Track(5, "Sweet Child O'Mine", "Guns N' Roses", "5:03", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg")
-        )
-
         // Adapter initialization
         tracksAdapter = TracksAdapter(displayedTracks) { track ->
             searchHistory.addTrack(track)
@@ -88,10 +126,10 @@ class SearchActivity : AppCompatActivity() {
         }
         recyclerView.adapter = tracksAdapter
 
-        // Search history title
+        // Search history title init
         historyTitle = findViewById(R.id.history_title)
 
-        // Clear history button
+        // Clear history button click listener
         clearHistoryButton.setOnClickListener {
             searchHistory.clearHistory()
             displayedTracks = emptyList()
@@ -119,32 +157,93 @@ class SearchActivity : AppCompatActivity() {
         searchEditText.setText(searchQuery)
     }
 
-    // Function for track filtration
-    private fun filterTracks(query: String) {
-        displayedTracks = if (query.isEmpty()) {
-            searchHistory.getHistory()
-        } else {
-            allTracks.filter { track ->
-                track.trackName.contains(query, ignoreCase = true) || track.artistName.contains(query, ignoreCase = true)
-            }
-        }
-        tracksAdapter.updateTracks(displayedTracks)
-        updateUI()
-    }
-
     // Function for ui update
     private fun updateUI() {
+        hideAllMessages()
+
         val hasHistory = searchHistory.getHistory().isNotEmpty()
         val isSearchEmpty = searchEditText.text.isNullOrEmpty()
-        recyclerView.visibility = if (displayedTracks.isNotEmpty()) View.VISIBLE else View.GONE
+
+        if (isSearchEmpty && hasHistory) {
+            loadTracks()
+        } else if (!isSearchEmpty) {
+            recyclerView.visibility = if (displayedTracks.isNotEmpty()) View.VISIBLE else View.GONE
+            if (displayedTracks.isEmpty()) {
+                showNoResults()
+            }
+        }
+
         clearHistoryButton.visibility = if (hasHistory && isSearchEmpty) View.VISIBLE else View.GONE
         historyTitle.visibility = if (hasHistory && isSearchEmpty) View.VISIBLE else View.GONE
     }
 
     // Function for load search history
     private fun loadTracks() {
-        displayedTracks = searchHistory.getHistory()
-        tracksAdapter.updateTracks(displayedTracks)
-        updateUI()
+        if (searchEditText.text.isNullOrEmpty()) {
+            displayedTracks = searchHistory.getHistory()
+            tracksAdapter.updateTracks(displayedTracks)
+        }
     }
+
+    // Perform search function
+    private fun performSearch(query: String) {
+        lastSearchQuery = query
+        iTunesApi.search(query).enqueue(object : Callback<ITunesResponse> {
+
+            override fun onResponse(call: Call<ITunesResponse>, response: Response<ITunesResponse>) {
+                if (response.isSuccessful) {
+                    response.body()?.results?.let { trackResponses ->
+                        displayedTracks = trackResponses.map {
+                            Track(
+                                trackId = it.trackId,
+                                trackName = it.trackName,
+                                artistName = it.artistName,
+                                trackTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(it.trackTimeMillis),
+                                artworkUrl100 = it.artworkUrl100
+                            )
+                        }
+
+                        tracksAdapter.updateTracks(displayedTracks)
+                        updateUI()
+
+                        if (displayedTracks.isEmpty()) {
+                            showNoResults()
+                        } else {
+                            hideAllMessages()
+                        }
+                    } ?: run {
+                        showNoResults()
+                    }
+                } else {
+                    showError()
+                }
+            }
+
+            override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
+                showError()
+            }
+        })
+    }
+
+    private fun showNoResults() {
+        errorFrame.visibility = View.VISIBLE
+        errorNotFound.visibility = View.VISIBLE
+        errorNoConnection.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+    }
+
+    private fun showError() {
+        errorFrame.visibility = View.VISIBLE
+        errorNotFound.visibility = View.GONE
+        errorNoConnection.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
+    }
+
+    private fun hideAllMessages() {
+        errorFrame.visibility = View.GONE
+        errorNotFound.visibility = View.GONE
+        errorNoConnection.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+    }
+
 }
