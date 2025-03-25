@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,8 +12,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import ITunesApi
-import ITunesResponse
 import android.icu.text.SimpleDateFormat
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -34,7 +33,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyTitle: TextView
     private var displayedTracks: List<Track> = emptyList()
     private lateinit var iTunesApi: ITunesApi
-    private lateinit var errorFrame: FrameLayout
     private lateinit var errorNotFound: FrameLayout
     private lateinit var errorNoConnection: LinearLayout
     private lateinit var refreshButton: Button
@@ -48,7 +46,6 @@ class SearchActivity : AppCompatActivity() {
         clearSearchButton = findViewById(R.id.clear_search_button)
         recyclerView = findViewById(R.id.recyclerView)
         clearHistoryButton = findViewById(R.id.clear_history_button)
-        errorFrame = findViewById(R.id.errorFrame)
         errorNotFound = findViewById(R.id.errorNotFound)
         errorNoConnection = findViewById(R.id.errorNoConnection)
         refreshButton = findViewById(R.id.refreshButton)
@@ -123,6 +120,13 @@ class SearchActivity : AppCompatActivity() {
         tracksAdapter = TracksAdapter(displayedTracks) { track ->
             searchHistory.addTrack(track)
             updateUI()
+
+            // Навигация только здесь
+            val intent = Intent(this, PlayerActivity::class.java).apply {
+                putExtra("track", track)
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP // Добавляем этот флаг
+            }
+            startActivity(intent)
         }
         recyclerView.adapter = tracksAdapter
 
@@ -137,8 +141,8 @@ class SearchActivity : AppCompatActivity() {
             updateUI()
         }
 
-        // On create UI update
-        updateUI()
+            // On create UI update
+            updateUI()
     }
 
     override fun onResume() {
@@ -189,7 +193,6 @@ class SearchActivity : AppCompatActivity() {
     private fun performSearch(query: String) {
         lastSearchQuery = query
         iTunesApi.search(query).enqueue(object : Callback<ITunesResponse> {
-
             override fun onResponse(call: Call<ITunesResponse>, response: Response<ITunesResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.results?.let { trackResponses ->
@@ -199,51 +202,54 @@ class SearchActivity : AppCompatActivity() {
                                 trackName = it.trackName,
                                 artistName = it.artistName,
                                 trackTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(it.trackTimeMillis),
-                                artworkUrl100 = it.artworkUrl100
+                                artworkUrl100 = it.artworkUrl100,
+                                collectionName = it.collectionName ?: "",
+                                releaseDate = formatReleaseDate(it.releaseDate),
+                                primaryGenreName = it.primaryGenreName ?: "",
+                                country = it.country ?: ""
                             )
                         }
-
                         tracksAdapter.updateTracks(displayedTracks)
                         updateUI()
-
-                        if (displayedTracks.isEmpty()) {
-                            showNoResults()
-                        } else {
-                            hideAllMessages()
-                        }
-                    } ?: run {
-                        showNoResults()
-                    }
-                } else {
-                    showError()
-                }
+                        if (displayedTracks.isEmpty()) showNoResults() else hideAllMessages()
+                    } ?: run { showNoResults() }
+                } else { showError() }
             }
-
-            override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
-                showError()
-            }
+            override fun onFailure(call: Call<ITunesResponse>, t: Throwable) { showError() }
         })
     }
 
     private fun showNoResults() {
-        errorFrame.visibility = View.VISIBLE
         errorNotFound.visibility = View.VISIBLE
         errorNoConnection.visibility = View.GONE
         recyclerView.visibility = View.GONE
     }
 
     private fun showError() {
-        errorFrame.visibility = View.VISIBLE
         errorNotFound.visibility = View.GONE
         errorNoConnection.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
     }
 
     private fun hideAllMessages() {
-        errorFrame.visibility = View.GONE
+
         errorNotFound.visibility = View.GONE
         errorNoConnection.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
     }
 
+    private fun formatReleaseDate(dateString: String?): String {
+        if (dateString.isNullOrEmpty()) return ""
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+            val date = inputFormat.parse(dateString)
+            val outputFormat = SimpleDateFormat("yyyy", Locale.getDefault())
+            outputFormat.format(date)
+        } catch (e: Exception) {
+            dateString.take(4)
+        }
+    }
+
 }
+
+

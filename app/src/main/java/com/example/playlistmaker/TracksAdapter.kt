@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -25,12 +26,9 @@ class TracksAdapter(private var tracks: List<Track>, private val onTrackClick: (
         return tracks.size
     }
 
-    // FUNCTION TO UPDATE TRACK LIST
     @SuppressLint("NotifyDataSetChanged")
     fun updateTracks(newTracks: List<Track>) {
         tracks = newTracks
         notifyDataSetChanged()
     }
-
 }
-

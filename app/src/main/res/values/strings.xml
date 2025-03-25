@@ -37,6 +37,17 @@
     <string name="checkInternetConnection">Загрузка не удалась. Проверьте подключение к интернету.</string>
     <string name="refresh">Обновить</string>
 
+    <!-- PLAYER SCREEN -->
+    <string name="back_button">Назад</string>
+    <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="play_pause">Воспроизвести/Пауза</string>
+    <string name="duration">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
+
     <!-- COMMON STRINGS -->
     <string name="app_name">PlaylistMaker</string>
     <string name="back_button_description">Вернуться назад</string>

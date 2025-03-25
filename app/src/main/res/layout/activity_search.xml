@@ -84,79 +84,75 @@
             tools:ignore="RtlSymmetry"/>
     </FrameLayout>
 
-    <!-- ERROR FRAME -->
+
+    <!-- NOT FOUND ERROR -->
     <FrameLayout
-        android:id="@+id/errorFrame"
+        android:id="@+id/errorNotFound"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        tools:visibility="visible">
-        <!-- NOT FOUND ERROR -->
-        <FrameLayout
-            android:id="@+id/errorNotFound"
+        tools:visibility="gone">
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            tools:visibility="gone">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="80dp"
-                android:text="@string/notFound"
-                android:gravity="center"
-                android:textColor="?attr/colorOnSecondary"
-                android:textSize="@dimen/subtitle_text_size"
-                android:fontFamily="@font/yandex_sans_display_medium"
-                app:drawableTopCompat="@drawable/not_found_placeholder" />
-        </FrameLayout>
-        <!-- NO CONNECTION ERROR -->
-        <LinearLayout
-            android:id="@+id/errorNoConnection"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="80dp"
-                android:text="@string/noConnection"
-                android:gravity="center"
-                android:textColor="?attr/colorOnSecondary"
-                android:textSize="@dimen/subtitle_text_size"
-                android:textStyle="bold"
-                android:fontFamily="@font/yandex_sans_display_regular"
-                app:drawableTopCompat="@drawable/no_connection_placeholder"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"
-                android:layout_marginHorizontal="30dp"
-                android:text="@string/checkInternetConnection"
-                android:gravity="center"
-                android:textColor="?attr/colorOnSecondary"
-                android:textSize="@dimen/subtitle_text_size"
-                android:textStyle="bold"
-                android:fontFamily="@font/yandex_sans_display_regular"/>
-            <!-- REFRESH BUTTON -->
-            <Button
-                android:id="@+id/refreshButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="16dp"
-                android:backgroundTint="?attr/colorButtonNormal"
-                android:contentDescription="@string/clear_history_description"
-                android:fontFamily="@font/yandex_sans_display_regular"
-                android:textSize="@dimen/regular_text_size"
-                android:text="@string/refresh"
-                android:textColor="?attr/colorSecondary" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80dp"
+            android:text="@string/notFound"
+            android:gravity="center"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="@dimen/subtitle_text_size"
+            android:fontFamily="@font/yandex_sans_display_medium"
+            app:drawableTopCompat="@drawable/not_found_placeholder" />
     </FrameLayout>
+
+    <!-- NO CONNECTION ERROR -->
+    <LinearLayout
+        android:id="@+id/errorNoConnection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80dp"
+            android:text="@string/noConnection"
+            android:gravity="center"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="@dimen/subtitle_text_size"
+            android:textStyle="bold"
+            android:fontFamily="@font/yandex_sans_display_regular"
+            app:drawableTopCompat="@drawable/no_connection_placeholder"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="30dp"
+            android:text="@string/checkInternetConnection"
+            android:gravity="center"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="@dimen/subtitle_text_size"
+            android:textStyle="bold"
+            android:fontFamily="@font/yandex_sans_display_regular"/>
+        <!-- REFRESH BUTTON -->
+        <Button
+            android:id="@+id/refreshButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:backgroundTint="?attr/colorButtonNormal"
+            android:contentDescription="@string/clear_history_description"
+            android:fontFamily="@font/yandex_sans_display_regular"
+            android:textAllCaps="false"
+            android:textSize="@dimen/regular_text_size"
+            android:text="@string/refresh"
+            android:textColor="?attr/colorSecondary" />
+    </LinearLayout>
+
 
     <!-- MAIN CONTENT PART -->
     <ScrollView
@@ -192,7 +188,7 @@
                 android:clipToPadding="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/track_view"
-                tools:visibility="gone"/>
+                tools:visibility="visible"/>
 
             <!-- CLEAR HISTORY BUTTON -->
             <Button
@@ -208,7 +204,7 @@
                 android:text="@string/clear_history_description"
                 android:textColor="?attr/colorSecondary"
                 android:visibility="visible"
-                tools:visibility="gone"/>
+                tools:visibility="visible"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

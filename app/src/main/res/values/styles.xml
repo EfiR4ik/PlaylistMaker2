@@ -70,6 +70,23 @@
         <item name="tint">?attr/colorTertiary</item>
     </style>
 
+    <!-- PLAYER SCREEN -->
+    <style name="TitleTrack">
+        <item name="android:textSize">@dimen/small_text_size</item>
+        <item name="android:fontFamily">@font/yandex_sans_display_regular</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnSecondaryFixed</item>
+    </style>
+
+    <style name="DataTrack">
+        <item name="android:textSize">@dimen/small_text_size</item>
+        <item name="android:fontFamily">@font/yandex_sans_display_regular</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:gravity">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <!-- COMMON STYLES-->
     <style name="titleText">
         <item name="android:fontFamily">@font/yandex_sans_display_medium</item>
