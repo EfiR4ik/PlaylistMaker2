@@ -13,8 +13,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import android.icu.text.SimpleDateFormat
+import android.os.Handler
+import android.os.Looper
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
@@ -37,6 +40,16 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var errorNoConnection: LinearLayout
     private lateinit var refreshButton: Button
     private var lastSearchQuery: String? = null
+    private lateinit var progressBar: ProgressBar
+    private val searchRunnable = Runnable { performSearch(searchQuery.toString()) }
+    private val handler = Handler(Looper.getMainLooper())
+    private var isClickAllowed = true
+
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +62,7 @@ class SearchActivity : AppCompatActivity() {
         errorNotFound = findViewById(R.id.errorNotFound)
         errorNoConnection = findViewById(R.id.errorNoConnection)
         refreshButton = findViewById(R.id.refreshButton)
+        progressBar = findViewById(R.id.progressBar)
         
         // Retrofit init
         val retrofit = Retrofit.Builder()
@@ -69,9 +83,13 @@ class SearchActivity : AppCompatActivity() {
 
         // Refresh button click listener
         refreshButton.setOnClickListener{
+            showLoading()
             lastSearchQuery?.let { query ->
-                performSearch(query)
+                if (query.isNotEmpty()){
+                    performSearch(query)
+                }
             }
+            hideLoading()
         }
 
         // Shared preferences and Search History
@@ -97,6 +115,8 @@ class SearchActivity : AppCompatActivity() {
                 if (s.isNullOrEmpty()) {
                     updateUI()
                 }
+                searchQuery = s.toString()
+                searchDebounce()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -118,15 +138,16 @@ class SearchActivity : AppCompatActivity() {
 
         // Adapter initialization
         tracksAdapter = TracksAdapter(displayedTracks) { track ->
-            searchHistory.addTrack(track)
-            updateUI()
+            if(clickDebounce()) {
+                searchHistory.addTrack(track)
+                updateUI()
 
-            // Навигация только здесь
-            val intent = Intent(this, PlayerActivity::class.java).apply {
-                putExtra("track", track)
-                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP // Добавляем этот флаг
+                val intent = Intent(this, PlayerActivity::class.java).apply {
+                    putExtra("track", track)
+                    flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
+                startActivity(intent)
             }
-            startActivity(intent)
         }
         recyclerView.adapter = tracksAdapter
 
@@ -191,6 +212,7 @@ class SearchActivity : AppCompatActivity() {
 
     // Perform search function
     private fun performSearch(query: String) {
+        showLoading()
         lastSearchQuery = query
         iTunesApi.search(query).enqueue(object : Callback<ITunesResponse> {
             override fun onResponse(call: Call<ITunesResponse>, response: Response<ITunesResponse>) {
@@ -206,16 +228,33 @@ class SearchActivity : AppCompatActivity() {
                                 collectionName = it.collectionName ?: "",
                                 releaseDate = formatReleaseDate(it.releaseDate),
                                 primaryGenreName = it.primaryGenreName ?: "",
-                                country = it.country ?: ""
+                                country = it.country ?: "",
+                                previewUrl = it.previewUrl ?: "",
                             )
                         }
                         tracksAdapter.updateTracks(displayedTracks)
                         updateUI()
-                        if (displayedTracks.isEmpty()) showNoResults() else hideAllMessages()
-                    } ?: run { showNoResults() }
-                } else { showError() }
+                        if (displayedTracks.isEmpty()) {
+                            showNoResults()
+                            hideLoading()
+                        }
+                        else {
+                            hideAllMessages()
+                            hideLoading()
+                        }
+                    } ?: run {
+                        showNoResults()
+                        hideLoading()
+                    }
+                } else {
+                    showError()
+                    hideLoading()
+                }
             }
-            override fun onFailure(call: Call<ITunesResponse>, t: Throwable) { showError() }
+            override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
+                showError()
+                hideLoading()
+            }
         })
     }
 
@@ -238,6 +277,18 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.visibility = View.VISIBLE
     }
 
+    private fun showLoading(){
+        progressBar.visibility = View.VISIBLE
+        clearHistoryButton.visibility = View.GONE
+        historyTitle.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+    }
+
+    private fun hideLoading(){
+        progressBar.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+    }
+
     private fun formatReleaseDate(dateString: String?): String {
         if (dateString.isNullOrEmpty()) return ""
         return try {
@@ -249,6 +300,21 @@ class SearchActivity : AppCompatActivity() {
             dateString.take(4)
         }
     }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
 
 }
 
