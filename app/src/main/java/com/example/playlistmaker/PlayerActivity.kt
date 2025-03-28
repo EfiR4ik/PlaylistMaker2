@@ -11,6 +11,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class PlayerActivity : AppCompatActivity() {
@@ -20,6 +24,7 @@ class PlayerActivity : AppCompatActivity() {
     private var progressHandler = Handler(Looper.getMainLooper())
     private lateinit var play: ImageView
     private lateinit var progress: TextView
+    private lateinit var favoriteTracksDao: FavoriteTracksDao
 
     companion object {
         private const val STATE_DEFAULT = 0
@@ -32,26 +37,62 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        val track = intent.getParcelableExtra<Track>("track")
-        track?.let { setupPlayer(it) }
+        val db = AppDatabase.getInstance(this)
+        favoriteTracksDao = db.favoriteTracksDao()
 
+        val track = intent.getParcelableExtra<Track>("track")
         play = findViewById(R.id.play_pause)
         progress = findViewById(R.id.progress)
+        val addToFavorites = findViewById<ImageView>(R.id.add_to_favorites)
 
-        findViewById<ImageView>(R.id.back_button).setOnClickListener {
-            finish()
-        }
+        track?.let {
+            setupPlayer(it)
+            checkIfFavorite(it)
 
-        track?.previewUrl?.let { url ->
-            if (url.isNotEmpty()) {
-                preparePlayer(url)
+            if (!it.previewUrl.isNullOrEmpty()) {
+                preparePlayer(it.previewUrl)
             } else {
                 play.isEnabled = false
             }
         }
 
+        findViewById<ImageView>(R.id.back_button).setOnClickListener {
+            finish()
+        }
+
         play.setOnClickListener {
             playbackControl()
+        }
+
+        addToFavorites.setOnClickListener {
+            track?.let { currentTrack ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    val existingTrack = favoriteTracksDao.getById(currentTrack.trackId)
+                    if (existingTrack != null) {
+                        favoriteTracksDao.delete(existingTrack)
+                        withContext(Dispatchers.Main) {
+                            addToFavorites.setImageResource(R.drawable.icon_unlike)
+                        }
+                    } else {
+                        val favoriteTrack = FavoriteTrackEntity(
+                            trackId = track.trackId,
+                            trackName = track.trackName,
+                            artistName = track.artistName,
+                            trackTime = track.trackTime,
+                            artworkUrl100 = track.artworkUrl100,
+                            collectionName = track.collectionName,
+                            releaseDate = track.releaseDate,
+                            primaryGenreName = track.primaryGenreName,
+                            country = track.country,
+                            previewUrl = track.previewUrl
+                        )
+                        favoriteTracksDao.insert(favoriteTrack)
+                        withContext(Dispatchers.Main) {
+                            addToFavorites.setImageResource(R.drawable.icon_like)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -151,4 +192,15 @@ class PlayerActivity : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("mm:ss", Locale.getDefault())
         return dateFormat.format(millis)
     }
+
+    private fun checkIfFavorite(track: Track) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val isFavorite = favoriteTracksDao.getById(track.trackId) != null
+            withContext(Dispatchers.Main) {
+                val iconRes = if (isFavorite) R.drawable.icon_like else R.drawable.icon_unlike
+                findViewById<ImageView>(R.id.add_to_favorites).setImageResource(iconRes)
+            }
+        }
+    }
+
 }

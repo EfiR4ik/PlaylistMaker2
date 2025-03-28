@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -38,6 +39,10 @@ android {
 
 dependencies {
     implementation(libs.glide)
+    implementation(libs.androidx.room.runtime.v260)
+    kapt(libs.androidx.room.compiler.v260)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.kotlinx.coroutines.android)
     annotationProcessor (libs.compiler)
     implementation(libs.gson)
     implementation (libs.retrofit)
